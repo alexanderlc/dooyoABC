@@ -50,6 +50,9 @@
   <ItemGroup>
     <Compile Include="CheckCodeParser.cs" />
     <Compile Include="CookieTool.cs" />
+    <Compile Include="DoubleBufferListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -8,24 +8,60 @@ namespace dooyoABC
 {
     class UserManager
     {
-        public static int STATUS_NULL = -1;
-        public static int STATUS_COOKIE_READY =0;
+        public static int STATUS_INIT = -2;
+        public static int STATUS_COOKIE_READY =-1;
+        public static int STATUS_START = 0;
         public static int STATUS_ONE = 1;
         public static int STATUS_TWO = 2;
+        private int mCurPos = 0;
         public class User
         {
-            public String _phone;
-            public String _pwd;
+            public String _phone = "";
+            public String _pwd = "";
             public int _status;
             public CookieCollection _cookies;
+            public String _msg="";
         }
+        List<String> mKeys ;
         public Dictionary<String, User> mMapUser;
         public UserManager()
         {
             mMapUser = new Dictionary<string, User>();
            
         }
-       
+        public void ResetNext()
+        {
+            mCurPos = 0;
+        }
+        public String getCurrentKey()
+        {
+            if (mCurPos >= 0 && mCurPos < mKeys.Count)
+            {
+                String key = mKeys[mCurPos];
+                return key;
+            }
+            else
+            {
+                return "";
+            }
+           
+        }
+        public int NextKey(){
+            if (mCurPos >= 0 && mCurPos < mKeys.Count)
+            {
+                mCurPos++;
+            }
+            else
+            {
+                mCurPos = 0;
+            }
+            return mCurPos;
+        }
+        public List<String> getKeys(){
+            List<String> keys = new List<string>(mMapUser.Keys);
+            return keys;
+        }
+           
         public int getUserCount()
         {
             return mMapUser.Count;
@@ -46,11 +82,12 @@ namespace dooyoABC
                         User u = new User();
                         u._phone = phone;
                         u._pwd = pwd;
-                        u._status = STATUS_NULL;
+                        u._status = STATUS_INIT;
                         u._cookies = new CookieCollection();
                         mMapUser.Add(phone, u);
                     }
                 }
+                mKeys = new List<string>(mMapUser.Keys);
                 return true;
             }
             catch (Exception ex)

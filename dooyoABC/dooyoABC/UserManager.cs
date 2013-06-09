@@ -53,7 +53,7 @@ namespace dooyoABC
             }
             else
             {
-                mCurPos = 0;
+                mCurPos = -1;
             }
             return mCurPos;
         }

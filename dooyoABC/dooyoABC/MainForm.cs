@@ -11,23 +11,41 @@ using System.Text.RegularExpressions;
 using System.Reflection;
 using mshtml;
 using System.Threading;
+using System.IO;
+using System.Configuration;
+using System.Diagnostics;
 namespace dooyoABC
 {
     public partial class MainForm : Form
     {
-        
+
+        static private string stringDateFormat = "yyyy-MM-dd HH:mm:ss";
+        private StreamWriter logFileWriter;             //写日志
         UserManager mUserManager;
         CheckCodeParser mParser = new CheckCodeParser();       
         String mLoginUrl = "http://sale.dooyo.cn/tuan/account/login.html";
         String mAccountUrl = "http://sale.dooyo.cn/tuan/account/myAccInfo.html?tradeId=toMyAccInfo";
         String mBuyURL = "http://sale.dooyo.cn/tuan/miao/orderMiao.html?tradeId=miaoSha";
-        String mProductID = "SZ1080010400348";
+        String mProductID = "SZ1080010400349";
         Dictionary<String ,BackgroundWorker> mWorkers;
         public MainForm()
         {
             InitializeComponent();
             mUserManager = new UserManager();
             mWorkers=new Dictionary<string,BackgroundWorker>();
+        }
+        //写日志，并显示
+        public void WriteLog(String str)
+        {
+            DateTime dt = DateTime.Now;
+            string sDt = dt.ToString(stringDateFormat);
+            ListViewItem item = new ListViewItem(sDt, 0);
+            item.SubItems.Add(str);
+            this.listViewLog.Items.AddRange(new ListViewItem[] { item });
+            this.listViewLog.Items[(this.listViewLog.Items.Count) - 1].EnsureVisible();   //滚到该行
+            logFileWriter.WriteLine(sDt + "    " + str);
+            logFileWriter.Flush();
+
         }
         private String CurrentPhone()
         {
@@ -48,6 +66,9 @@ namespace dooyoABC
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            this.Text = "秒杀器 v1.0" + " 2013-06-08版";
+            this.mProductID= ConfigurationManager.AppSettings["pid"];
+            logFileWriter = File.AppendText(".\\log.txt");
             this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
             this.backgroundWorkerLoadUsers.RunWorkerAsync();
 
@@ -96,10 +117,21 @@ namespace dooyoABC
             while (u._status !=UserManager.STATUS_COOKIE_READY)
             {
                 String msg =miaoshaWork(u);
+                if(msg.StartsWith("DONE")){
+                    if (u._status == UserManager.STATUS_ONE)
+                    {
+                        u._status = UserManager.STATUS_TWO;
+                    }
+                    else
+                    {
+                        u._status = UserManager.STATUS_ONE;
+                    }
+                }
                 count = count + 1;
                 u._msg = "开始..." + count+" "+msg;
+                String logMsg = "用户" + u._phone + " 第" + count + "次尝试，" + msg;
                 Thread.Sleep(100);
-                bw.ReportProgress(1);
+                bw.ReportProgress(1, logMsg);
             }
         }
         void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -110,6 +142,8 @@ namespace dooyoABC
         void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             int per = e.ProgressPercentage;
+            String msg = e.UserState.ToString();
+            WriteLog(msg);
             ResetUserListView();
         }
 
@@ -171,7 +205,7 @@ namespace dooyoABC
                                     sr3.Close();
                                     if (content3.Contains("抱歉"))
                                     {
-                                        msg = "很抱歉，提交失败啦";
+                                        msg = "ER:很抱歉，提交失败啦";
                                     }
                                     else
                                     {
@@ -196,11 +230,11 @@ namespace dooyoABC
                                             //成功啦
                                             if (contentBuy.Contains("抱歉") || contentBuy.Contains("未开始秒杀"))
                                             {
-                                                msg = "很抱歉，下单失败啦";
+                                                msg = "ER:很抱歉，下单失败啦";
                                             }
                                             else
                                             {
-                                                msg = "快付款吧";
+                                                msg = "DONE:快付款吧";
                                             }
                                         }
                                         else
@@ -219,14 +253,15 @@ namespace dooyoABC
                     catch (Exception ex)
                     {
                         String str = ex.ToString();
-                        str = "错误：" + str;
+                        str = "ER:" + str;
                     }
                 }
                 return msg;
             }
             catch (Exception ex)
             {
-                return "出错了" + ex.ToString();
+                String str = "ER:出错了" + ex.ToString();
+                return str;
             }
         }
         void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
@@ -270,10 +305,13 @@ namespace dooyoABC
                             ck.Domain = "sale.dooyo.cn";                        
                             u._cookies.Add(ck);
                         }
-                        u._status = UserManager.STATUS_COOKIE_READY;                    
-                        mUserManager.NextKey();
+                        u._status = UserManager.STATUS_COOKIE_READY;
+                        WriteLog("获取用户 "+u._phone+" 的cookie成功");
                         ResetUserListView();
-                        this.webBrowser1.Navigate(mLoginUrl);
+                        if (mUserManager.NextKey() != -1)
+                        {
+                            this.webBrowser1.Navigate(mLoginUrl);
+                        }
                     }//end if (!mCurrentPhone.Equals(""))
                 }
             }
@@ -368,6 +406,7 @@ namespace dooyoABC
         {
             this.mUserManager.ResetNext();
             ResetUserListView();
+            WriteLog("完成用户加载");
             this.webBrowser1.Navigate(mLoginUrl);
             
         }
@@ -388,11 +427,36 @@ namespace dooyoABC
                 stopWorker(kv.Value);
             }
             ResetUserListView();
+            WriteLog("手动停止");
         }
 
         private void RefreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ResetUserListView();
+        }
+
+        private void ConfigToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConfigForm cf = new ConfigForm();
+            cf.PID = mProductID;
+            if (cf.ShowDialog() == DialogResult.OK)
+            {
+                mProductID = cf.PID;
+                Configuration cfa = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                KeyValueConfigurationElement kvc = cfa.AppSettings.Settings["pid"];
+                if (kvc != null)
+                {
+                    kvc.Value = mProductID;
+                }
+                else
+                {
+                    cfa.AppSettings.Settings.Add("pid", mProductID);
+                }
+                cfa.Save();
+                WriteLog("更换商品ID："+mProductID);
+                String url = "http://sale.dooyo.cn/tuan/miao/miaoindex.html?tradeId=webViewMiao&product_id=" + mProductID;
+                Process.Start(url);
+            }
         }  
     }
 }

@@ -46,8 +46,12 @@ namespace Utils
                 request.CookieContainer = new CookieContainer();
                 request.CookieContainer.Add(cookies);
             }
-            HttpWebResponse hwr = request.GetResponse() as HttpWebResponse;
-            return hwr;
+            HttpWebResponse res = (HttpWebResponse)request.GetResponse();
+            //if (request.CookieContainer != null)
+            //{
+            //    res.Cookies.Add(request.CookieContainer.GetCookies(request.RequestUri));
+            //}
+            return res;
         }
         /// <summary>  
         /// 创建POST方式的HTTP请求  
@@ -59,7 +63,7 @@ namespace Utils
         /// <param name="requestEncoding">发送HTTP请求时所用的编码</param>  
         /// <param name="cookies">随同HTTP请求发送的Cookie信息，如果不需要身份验证可以为空</param>  
         /// <returns></returns>  
-        public static HttpWebResponse CreatePostHttpResponse(string url, IDictionary<string, string> parameters, int? timeout, string userAgent, Encoding requestEncoding, CookieCollection cookies)
+        public static HttpWebResponse CreatePostHttpResponse(string url, IDictionary<string, string> parameters, int? timeout, string userAgent, Encoding requestEncoding, CookieCollection cookies,bool redirect)
         {
             if (string.IsNullOrEmpty(url))
             {
@@ -83,7 +87,9 @@ namespace Utils
             }
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
-
+            request.KeepAlive = true;
+            request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+           
             if (!string.IsNullOrEmpty(userAgent))
             {
                 request.UserAgent = userAgent;
@@ -125,7 +131,15 @@ namespace Utils
                     stream.Write(data, 0, data.Length);
                 }
             }
-            WebResponse res=request.GetResponse() ;
+            request.AllowAutoRedirect = redirect;
+            request.Headers.Add("Accept-Encoding", "gzip, deflate");
+            request.Headers.Add("Accept-Language", "zh-cn,zh;q=0.8,en-us;q=0.5,en;q=0.3");
+         
+            HttpWebResponse res = (HttpWebResponse)request.GetResponse();
+            if (request.CookieContainer != null)
+            {
+                res.Cookies.Add(request.CookieContainer.GetCookies(request.RequestUri));
+            }     
             return res as HttpWebResponse;
         }
 

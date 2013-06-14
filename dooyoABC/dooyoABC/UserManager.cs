@@ -6,7 +6,7 @@ using System.Net;
 
 namespace dooyoABC
 {
-    class UserManager
+   public class UserManager
     {
         public static int STATUS_INIT = -2;
         public static int STATUS_COOKIE_READY =-1;

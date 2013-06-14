@@ -415,6 +415,10 @@ namespace dooyoABC
                 {
                     UserManager.User u = mUserManager.mMapUser[phones[i]];
                     u._cookies = login(u._phone, u._pwd);
+                    if (u._cookies.Count > 0)
+                    {
+                        u._status = UserManager.STATUS_COOKIE_READY;
+                    }
                     int per = i * 100 / phones.Count;
                     this.backgroundWorkerLoadUsers.ReportProgress(per, u._phone);
                 }
@@ -427,9 +431,16 @@ namespace dooyoABC
         }
         private void backgroundWorkerLoadUsers_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            String phone = e.UserState.ToString();
-            String jid = mUserManager.mMapUser[phone]._cookies["JSESSIONID"].Value;
-            WriteLog("用户:"+phone+" 登录成功,"+jid);
+            try
+            {
+                String phone = e.UserState.ToString();
+                String jid = mUserManager.mMapUser[phone]._cookies["JSESSIONID"].Value;
+                WriteLog("用户:" + phone + " 登录成功," + jid);
+
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         private void backgroundWorkerLoadUsers_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -533,8 +544,5 @@ namespace dooyoABC
                 return new CookieCollection();
             }
         }
-
-      
-
     }
 }

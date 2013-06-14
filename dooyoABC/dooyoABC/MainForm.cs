@@ -9,7 +9,6 @@ using System.Net;
 using Utils;
 using System.Text.RegularExpressions;
 using System.Reflection;
-using mshtml;
 using System.Threading;
 using System.IO;
 using System.Configuration;
@@ -27,7 +26,7 @@ namespace dooyoABC
         UserManager mUserManager;
         CheckCodeParser mParser = new CheckCodeParser();
         String mLoginUrl = "http://sale.dooyo.cn/tuan/account/login.html";
-        String mAccountUrl = "http://sale.dooyo.cn/tuan/account/myAccInfo.html?tradeId=toMyAccInfo";
+        //String mAccountUrl = "http://sale.dooyo.cn/tuan/account/myAccInfo.html?tradeId=toMyAccInfo";
         String mBuyURL = "http://sale.dooyo.cn/tuan/miao/orderMiao.html?tradeId=miaoSha";
         String mProductID = "SZ1080010400349";
         Dictionary<String, BackgroundWorker> mWorkers;
@@ -58,10 +57,9 @@ namespace dooyoABC
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            this.Text = "秒杀器 v1.0" + " 2013-06-08版";
+            this.Text = "秒杀器 v1.0" + " 2013-06-14版";
             this.mProductID = ConfigurationManager.AppSettings["pid"];
             logFileWriter = File.AppendText(".\\log.txt");
-            //this.webBrowser1.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(webBrowser1_DocumentCompleted);
             this.backgroundWorkerLoadUsers.RunWorkerAsync();
 
         }
@@ -378,33 +376,7 @@ namespace dooyoABC
             this.listViewUser.Items.Add(lvItem);
         }
 
-        /// <summary>
-        /// 返回指定WebBrowser中图片<IMG></IMG>中的图内容
-        /// </summary>
-        /// <param name="WebCtl">WebBrowser控件</param>
-        /// <param name="ImgeTag">IMG元素</param>
-        /// <returns>IMG对象</returns>
-        private Image GetWebImage(WebBrowser WebCtl, HtmlElement ImgeTag)
-        {
-            HTMLDocument doc = (HTMLDocument)WebCtl.Document.DomDocument;
-            HTMLBody body = (HTMLBody)doc.body;
-            IHTMLControlRange rang = (IHTMLControlRange)body.createControlRange();
-            IHTMLControlElement Img = (IHTMLControlElement)ImgeTag.DomElement; //图片地址
-
-            Image oldImage = Clipboard.GetImage();
-            rang.add(Img);
-            rang.execCommand("Copy", false, null);  //拷贝到内存
-            Image numImage = Clipboard.GetImage();
-            try
-            {
-                Clipboard.SetImage(oldImage);
-            }
-            catch
-            {
-            }
-
-            return numImage;
-        }
+       
         private void backgroundWorkerLoadUsers_DoWork(object sender, DoWorkEventArgs e)
         {
             String path = Application.StartupPath + "\\config.txt";

@@ -19,8 +19,11 @@ namespace dooyoABC
     public partial class MainForm : Form
     {
 
+        public volatile String mStr;
         static private string stringDateFormat = "yyyy-MM-dd HH:mm:ss";
         private StreamWriter logFileWriter;             //写日志
+
+
         UserManager mUserManager;
         CheckCodeParser mParser = new CheckCodeParser();       
         String mLoginUrl = "http://sale.dooyo.cn/tuan/account/login.html";
@@ -116,7 +119,10 @@ namespace dooyoABC
             
             while (u._status !=UserManager.STATUS_COOKIE_READY)
             {
+                Monitor.Enter(oLock);
                 String msg =miaoshaWork(u);
+
+                Monitor.Exit(oLock);
                 if(msg.StartsWith("DONE")){
                     if (u._status == UserManager.STATUS_ONE)
                     {
@@ -146,7 +152,7 @@ namespace dooyoABC
             WriteLog(msg);
             ResetUserListView();
         }
-
+        Object oLock = new Object();
         String miaoshaWork(UserManager.User u)
         {
             try
@@ -256,6 +262,7 @@ namespace dooyoABC
                         str = "ER:" + str;
                     }
                 }
+                mStr = msg;
                 return msg;
             }
             catch (Exception ex)

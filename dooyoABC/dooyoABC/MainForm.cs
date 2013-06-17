@@ -191,6 +191,8 @@ namespace dooyoABC
                                 IDictionary<string, string> parameters2 = new Dictionary<string, string>();
                                 parameters2.Add("code", checkCode);
                                 parameters2.Add("vCode", checkCode);
+                                parameters2.Add("userOrdersCount", "0");
+                                parameters2.Add("maxOrdersCount", "10");//2
                                 HttpWebResponse response3 = HttpWebResponseUtility.CreatePostHttpResponse(
                                     submitURL, parameters2, null, null, encoding, cookieCollection,true);
                                 if (response3.StatusCode == HttpStatusCode.OK)
@@ -356,6 +358,10 @@ namespace dooyoABC
             }
             lvSubItem.Text = status;
             lvItem.SubItems.Add(lvSubItem);
+            //未付款数
+            lvSubItem = new ListViewItem.ListViewSubItem();
+            lvSubItem.Text = "" + u._unpayCount;
+            lvItem.SubItems.Add(lvSubItem);
             //密码
             lvSubItem = new ListViewItem.ListViewSubItem();
             lvSubItem.Text = "未获取";
@@ -372,8 +378,15 @@ namespace dooyoABC
             lvSubItem = new ListViewItem.ListViewSubItem();
             lvSubItem.Text = u._msg;
             lvItem.SubItems.Add(lvSubItem);
+            
             lvItem.Tag = u;
+            if (u._unpayCount > 0)
+            {
+                lvItem.BackColor = Color.Red;
+            }
             this.listViewUser.Items.Add(lvItem);
+           
+         
         }
 
        
@@ -421,7 +434,10 @@ namespace dooyoABC
             WriteLog("完成用户加载");
           
             ResetUserListView();
-
+            if (!this.backgroundWorkerUnpay.IsBusy)
+            {
+                this.backgroundWorkerUnpay.RunWorkerAsync();
+            }
         }
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)
@@ -514,6 +530,58 @@ namespace dooyoABC
             {
                 String er = ex.ToString();
                 return new CookieCollection();
+            }
+        }
+
+        private void backgroundWorkerUnpay_DoWork(object sender, DoWorkEventArgs e)
+        {
+            String url = "http://sale.dooyo.cn/tuan/account/myOrder.html?tradeId=queryAccOrderList";
+            String keyword = "未支付";
+            List<String> phones = mUserManager.getKeys();
+            for (int i = 0; i < phones.Count; i++)
+            {
+                UserManager.User u = mUserManager.mMapUser[phones[i]];
+                //查看订单页面              
+                HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(url, null, null, u._cookies);
+                System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream());
+                String content = sr.ReadToEnd(); //这里的content就是网页内容了 
+                sr.Close();
+                response.Close();
+                u._unpayCount = Regex.Matches(content, keyword).Count;
+                //if (content.Contains(keyword))
+                //{
+                //    u._unpayCount = 1;
+                //}
+                
+            }
+        }
+
+        private void backgroundWorkerUnpay_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.CheckPayToolStripMenuItem.Enabled = true;
+            ResetUserListView();            
+        }
+
+        private void CheckPayToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!this.backgroundWorkerUnpay.IsBusy)
+            {
+                this.CheckPayToolStripMenuItem.Enabled = false;
+                this.backgroundWorkerUnpay.RunWorkerAsync();
+            }
+        }
+
+        private void listViewUser_DoubleClick(object sender, EventArgs e)
+        {
+            if (this.listViewUser.SelectedItems.Count > 0)
+            {
+                ListViewItem lvi = this.listViewUser.SelectedItems[0];
+                UserManager.User u = lvi.Tag as UserManager.User;
+                if (u._unpayCount>0)
+                {
+                    WebViewForm wvf = new WebViewForm(u);
+                    wvf.Show();
+                }
             }
         }
     }

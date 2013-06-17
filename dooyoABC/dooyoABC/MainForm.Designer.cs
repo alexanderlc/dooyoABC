@@ -36,16 +36,19 @@ namespace dooyoABC
             this.StopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RefreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.listViewUser = new Utils.DoubleBufferListView();
-            this.columnHeaderPhone = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderPWD = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderMsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.listViewLog = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.backgroundWorkerUnpay = new System.ComponentModel.BackgroundWorker();
+            this.CheckPayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listViewUser = new Utils.DoubleBufferListView();
+            this.columnHeaderPhone = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderPay = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderPWD = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderMsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -66,7 +69,8 @@ namespace dooyoABC
             this.ConfigToolStripMenuItem,
             this.StartToolStripMenuItem,
             this.StopToolStripMenuItem,
-            this.RefreshToolStripMenuItem});
+            this.RefreshToolStripMenuItem,
+            this.CheckPayToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(777, 25);
@@ -121,44 +125,6 @@ namespace dooyoABC
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 3;
             // 
-            // listViewUser
-            // 
-            this.listViewUser.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderPhone,
-            this.columnHeaderStatus,
-            this.columnHeaderPWD,
-            this.columnHeaderMsg});
-            this.listViewUser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewUser.FullRowSelect = true;
-            this.listViewUser.GridLines = true;
-            this.listViewUser.Location = new System.Drawing.Point(0, 0);
-            this.listViewUser.MultiSelect = false;
-            this.listViewUser.Name = "listViewUser";
-            this.listViewUser.Size = new System.Drawing.Size(777, 231);
-            this.listViewUser.TabIndex = 1;
-            this.listViewUser.UseCompatibleStateImageBehavior = false;
-            this.listViewUser.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeaderPhone
-            // 
-            this.columnHeaderPhone.Text = "手机号";
-            this.columnHeaderPhone.Width = 150;
-            // 
-            // columnHeaderStatus
-            // 
-            this.columnHeaderStatus.Text = "状态";
-            this.columnHeaderStatus.Width = 80;
-            // 
-            // columnHeaderPWD
-            // 
-            this.columnHeaderPWD.Text = "加密密码";
-            this.columnHeaderPWD.Width = 200;
-            // 
-            // columnHeaderMsg
-            // 
-            this.columnHeaderMsg.Text = "消息";
-            this.columnHeaderMsg.Width = 300;
-            // 
             // splitter1
             // 
             this.splitter1.Cursor = System.Windows.Forms.Cursors.HSplit;
@@ -199,6 +165,65 @@ namespace dooyoABC
             this.statusStrip1.Size = new System.Drawing.Size(777, 22);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // backgroundWorkerUnpay
+            // 
+            this.backgroundWorkerUnpay.WorkerReportsProgress = true;
+            this.backgroundWorkerUnpay.WorkerSupportsCancellation = true;
+            this.backgroundWorkerUnpay.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerUnpay_DoWork);
+            this.backgroundWorkerUnpay.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerUnpay_RunWorkerCompleted);
+            // 
+            // CheckPayToolStripMenuItem
+            // 
+            this.CheckPayToolStripMenuItem.Enabled = false;
+            this.CheckPayToolStripMenuItem.Name = "CheckPayToolStripMenuItem";
+            this.CheckPayToolStripMenuItem.Size = new System.Drawing.Size(92, 21);
+            this.CheckPayToolStripMenuItem.Text = "查看支付状况";
+            this.CheckPayToolStripMenuItem.Click += new System.EventHandler(this.CheckPayToolStripMenuItem_Click);
+            // 
+            // listViewUser
+            // 
+            this.listViewUser.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderPhone,
+            this.columnHeaderStatus,
+            this.columnHeaderPay,
+            this.columnHeaderPWD,
+            this.columnHeaderMsg});
+            this.listViewUser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewUser.FullRowSelect = true;
+            this.listViewUser.GridLines = true;
+            this.listViewUser.Location = new System.Drawing.Point(0, 0);
+            this.listViewUser.MultiSelect = false;
+            this.listViewUser.Name = "listViewUser";
+            this.listViewUser.Size = new System.Drawing.Size(777, 231);
+            this.listViewUser.TabIndex = 1;
+            this.listViewUser.UseCompatibleStateImageBehavior = false;
+            this.listViewUser.View = System.Windows.Forms.View.Details;
+            this.listViewUser.DoubleClick += new System.EventHandler(this.listViewUser_DoubleClick);
+            // 
+            // columnHeaderPhone
+            // 
+            this.columnHeaderPhone.Text = "手机号";
+            this.columnHeaderPhone.Width = 120;
+            // 
+            // columnHeaderStatus
+            // 
+            this.columnHeaderStatus.Text = "状态";
+            this.columnHeaderStatus.Width = 80;
+            // 
+            // columnHeaderPay
+            // 
+            this.columnHeaderPay.Text = "未支付数";
+            // 
+            // columnHeaderPWD
+            // 
+            this.columnHeaderPWD.Text = "加密密码";
+            this.columnHeaderPWD.Width = 200;
+            // 
+            // columnHeaderMsg
+            // 
+            this.columnHeaderMsg.Text = "消息";
+            this.columnHeaderMsg.Width = 300;
             // 
             // MainForm
             // 
@@ -241,6 +266,9 @@ namespace dooyoABC
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ToolStripMenuItem ConfigToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader columnHeaderPay;
+        private System.ComponentModel.BackgroundWorker backgroundWorkerUnpay;
+        private System.Windows.Forms.ToolStripMenuItem CheckPayToolStripMenuItem;
     }
 }
 

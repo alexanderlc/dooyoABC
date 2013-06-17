@@ -21,6 +21,7 @@ namespace dooyoABC
             public int _status;
             public CookieCollection _cookies;
             public String _msg="";
+            public int _unpayCount=0;
         }
         List<String> mKeys ;
         public Dictionary<String, User> mMapUser;

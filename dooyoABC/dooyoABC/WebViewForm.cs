@@ -26,47 +26,44 @@ namespace dooyoABC
 
         private void WebViewForm_Load(object sender, EventArgs e)
         {
-            this.webBrowser1.AllowWebBrowserDrop = false;
-            this.webBrowser1.NewWindow += new CancelEventHandler(webBrowser1_NewWindow);
+            this.axWebBrowser1.RegisterAsBrowser = true;
+            this.axWebBrowser1.Silent = true;
+            this.axWebBrowser1.NewWindow3 += new AxSHDocVw.DWebBrowserEvents2_NewWindow3EventHandler(axWebBrowser1_NewWindow3);
+            this.axWebBrowser1.NewWindow2 += new AxSHDocVw.DWebBrowserEvents2_NewWindow2EventHandler(axWebBrowser1_NewWindow2);
             this.Text = "付款：" + mUser._phone;
             if (mUser._cookies != null && mUser._cookies.Count > 0)
             {
                 foreach (Cookie ck in mUser._cookies)
                 {
-                    InternetSetCookie(mURLMyOrder, ck.Name, ck.Value);
+                    InternetSetCookie(mURLMyOrder, ck.Name, ck.Value);                   
                 }
-                this.webBrowser1.Navigate(mURLMyOrder);
+                //this.webBrowser1.Navigate(mURLMyOrder);
+                this.axWebBrowser1.Navigate(mURLMyOrder);
             }
             else
             {
-                this.webBrowser1.Navigate(mLoginURL);
+                this.axWebBrowser1.Navigate(mLoginURL);
             }
         }
 
-        void webBrowser1_NewWindow(object sender, CancelEventArgs e)
+        void axWebBrowser1_NewWindow3(object sender, AxSHDocVw.DWebBrowserEvents2_NewWindow3Event e)
         {
-            string url = webBrowser1.Document.ActiveElement.GetAttribute("href");
-            if (url != string.Empty)
+            e.cancel = true;
+            if (mUser._cookies != null && mUser._cookies.Count > 0)
             {
-                webBrowser1.Navigate(url);
+                foreach (Cookie ck in mUser._cookies)
+                {
+                    InternetSetCookie(e.bstrUrl, ck.Name, ck.Value);
+                }              
             }
-            e.Cancel = true;
+            this.axWebBrowser1.Navigate(e.bstrUrl);
         }
 
-
-        private void webBrowser1_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        void axWebBrowser1_NewWindow2(object sender, AxSHDocVw.DWebBrowserEvents2_NewWindow2Event e)
         {
-            //将所有的链接的目标，指向本窗体
-            foreach (HtmlElement archor in this.webBrowser1.Document.Links)
-            {
-                archor.SetAttribute("target", "_self");
-            }
-
-            //将所有的FORM的提交目标，指向本窗体
-            foreach (HtmlElement form in this.webBrowser1.Document.Forms)
-            {
-                form.SetAttribute("target", "_self");
-            }
-        }
+            //String url =
+            e.cancel = true;
+            
+        }       
     }
 }

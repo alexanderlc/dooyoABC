@@ -24,10 +24,11 @@ namespace dooyoABC
 
 
         UserManager mUserManager;
-        CheckCodeParser mParser = new CheckCodeParser();
+       
         String mLoginUrl = "http://sale.dooyo.cn/tuan/account/login.html";
         //String mAccountUrl = "http://sale.dooyo.cn/tuan/account/myAccInfo.html?tradeId=toMyAccInfo";
         String mBuyURL = "http://sale.dooyo.cn/tuan/miao/orderMiao.html?tradeId=miaoSha";
+        String mURLMyOrder = "http://sale.dooyo.cn/tuan/account/myOrder.html?tradeId=queryAccOrderList";
         String mProductID = "SZ1080010400349";
         Dictionary<String, BackgroundWorker> mWorkers;
         public MainForm()
@@ -156,6 +157,7 @@ namespace dooyoABC
                 {
                     System.IO.Stream resStream = response.GetResponseStream();
                     System.Drawing.Image i = Image.FromStream(resStream);
+                    CheckCodeParser mParser = u._parser;
                     String checkCode = mParser.parse(i);
                     response.Close();
                     //log("获取验证码：" + checkCode);
@@ -499,7 +501,8 @@ namespace dooyoABC
                 {
                     System.IO.Stream resStream = responseCode.GetResponseStream();
                     System.Drawing.Image i = Image.FromStream(resStream);
-                    String checkCode = mParser.parse(i);
+                    CheckCodeParser _parser = new CheckCodeParser();
+                    String checkCode = _parser.parse(i);
                     responseCode.Close();
                     IDictionary<string, string> loginParams = new Dictionary<string, string>();
                     loginParams.Add("autoLogin", "true");
@@ -573,6 +576,7 @@ namespace dooyoABC
 
         private void listViewUser_DoubleClick(object sender, EventArgs e)
         {
+             
             if (this.listViewUser.SelectedItems.Count > 0)
             {
                 ListViewItem lvi = this.listViewUser.SelectedItems[0];
@@ -580,7 +584,7 @@ namespace dooyoABC
                 if (u._unpayCount>0)
                 {
                     WebViewForm wvf = new WebViewForm(u);
-                    wvf.Show();
+                    wvf.Show();   
                 }
             }
         }

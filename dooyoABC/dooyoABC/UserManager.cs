@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Net;
+using Utils;
 
 namespace dooyoABC
 {
@@ -22,6 +23,7 @@ namespace dooyoABC
             public CookieCollection _cookies;
             public String _msg="";
             public int _unpayCount=0;
+            public CheckCodeParser _parser=new CheckCodeParser();
         }
         List<String> mKeys ;
         public Dictionary<String, User> mMapUser;
@@ -143,5 +145,6 @@ namespace dooyoABC
                 return true;
             }
         }
+       
     }
 }

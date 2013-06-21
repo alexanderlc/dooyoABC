@@ -24,12 +24,12 @@ namespace dooyoABC
 
 
         UserManager mUserManager;
-       
+
         String mLoginUrl = "http://sale.dooyo.cn/tuan/account/login.html";
         //String mAccountUrl = "http://sale.dooyo.cn/tuan/account/myAccInfo.html?tradeId=toMyAccInfo";
         String mBuyURL = "http://sale.dooyo.cn/tuan/miao/orderMiao.html?tradeId=miaoSha";
         String mURLMyOrder = "http://sale.dooyo.cn/tuan/account/myOrder.html?tradeId=queryAccOrderList";
-        String mProductID = "SZ1080010400349";
+        String mProductID = "SZ1080010400353";
         Dictionary<String, BackgroundWorker> mWorkers;
         public MainForm()
         {
@@ -58,7 +58,7 @@ namespace dooyoABC
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            this.Text = "秒杀器 v1.0" + " 2013-06-14版";
+            this.Text = "秒杀器 v2.1" + " 2013-06-19版";
             this.mProductID = ConfigurationManager.AppSettings["pid"];
             logFileWriter = File.AppendText(".\\log.txt");
             this.backgroundWorkerLoadUsers.RunWorkerAsync();
@@ -107,15 +107,16 @@ namespace dooyoABC
 
             while (u._status != UserManager.STATUS_COOKIE_READY)
             {
-               // Monitor.Enter(oLock);
+                // Monitor.Enter(oLock);
                 String msg = miaoshaWork(u);
 
-               // Monitor.Exit(oLock);
+                // Monitor.Exit(oLock);
                 if (msg.StartsWith("DONE"))
                 {
                     if (u._status == UserManager.STATUS_ONE)
                     {
                         u._status = UserManager.STATUS_TWO;
+                        return;
                     }
                     else
                     {
@@ -170,7 +171,7 @@ namespace dooyoABC
                         parameters.Add("code", checkCode);
                         parameters.Add("product_id", mProductID);
                         HttpWebResponse response2 = HttpWebResponseUtility.CreatePostHttpResponse(
-                            checkCodeURL, parameters, null, null, encoding, cookieCollection,true);
+                            checkCodeURL, parameters, null, null, encoding, cookieCollection, true);
                         if (response2.StatusCode == HttpStatusCode.OK)
                         {
                             // log("验证验证码：" + checkCode);
@@ -196,7 +197,7 @@ namespace dooyoABC
                                 parameters2.Add("userOrdersCount", "0");
                                 parameters2.Add("maxOrdersCount", "10");//2
                                 HttpWebResponse response3 = HttpWebResponseUtility.CreatePostHttpResponse(
-                                    submitURL, parameters2, null, null, encoding, cookieCollection,true);
+                                    submitURL, parameters2, null, null, encoding, cookieCollection, true);
                                 if (response3.StatusCode == HttpStatusCode.OK)
                                 {
                                     //log("提交form");
@@ -206,7 +207,7 @@ namespace dooyoABC
                                     response3.Close();
                                     if (content3.Contains("抱歉"))
                                     {
-                                        msg = "ER:很抱歉，提交失败啦" ;
+                                        msg = "ER:很抱歉，提交失败啦";
                                     }
                                     else
                                     {
@@ -221,7 +222,7 @@ namespace dooyoABC
                                         buyParams.Add("product_type", "0");
                                         buyParams.Add("quantity", "1");
                                         HttpWebResponse responseBuy = HttpWebResponseUtility.CreatePostHttpResponse(
-                                               mBuyURL, buyParams, null, null, encoding, cookieCollection,true);
+                                               mBuyURL, buyParams, null, null, encoding, cookieCollection, true);
                                         if (responseBuy.StatusCode == HttpStatusCode.OK)
                                         {
                                             //log("下单");
@@ -231,7 +232,7 @@ namespace dooyoABC
                                             //成功啦
                                             if (contentBuy.Contains("抱歉") || contentBuy.Contains("未开始秒杀"))
                                             {
-                                                msg = "ER:很抱歉，下单失败啦" ;
+                                                msg = "ER:很抱歉，下单失败啦";
                                             }
                                             else
                                             {
@@ -364,6 +365,10 @@ namespace dooyoABC
             lvSubItem = new ListViewItem.ListViewSubItem();
             lvSubItem.Text = "" + u._unpayCount;
             lvItem.SubItems.Add(lvSubItem);
+            //结果
+            lvSubItem = new ListViewItem.ListViewSubItem();
+            lvSubItem.Text = "" + u._resultCount;
+            lvItem.SubItems.Add(lvSubItem);
             //密码
             lvSubItem = new ListViewItem.ListViewSubItem();
             lvSubItem.Text = "未获取";
@@ -380,18 +385,18 @@ namespace dooyoABC
             lvSubItem = new ListViewItem.ListViewSubItem();
             lvSubItem.Text = u._msg;
             lvItem.SubItems.Add(lvSubItem);
-            
+
             lvItem.Tag = u;
             if (u._unpayCount > 0)
             {
                 lvItem.BackColor = Color.Red;
             }
             this.listViewUser.Items.Add(lvItem);
-           
-         
+
+
         }
 
-       
+
         private void backgroundWorkerLoadUsers_DoWork(object sender, DoWorkEventArgs e)
         {
             String path = Application.StartupPath + "\\config.txt";
@@ -434,11 +439,15 @@ namespace dooyoABC
         {
             this.mUserManager.ResetNext();
             WriteLog("完成用户加载");
-          
+
             ResetUserListView();
             if (!this.backgroundWorkerUnpay.IsBusy)
             {
                 this.backgroundWorkerUnpay.RunWorkerAsync();
+            }
+            if (!this.backgroundWorkerResult.IsBusy)
+            {
+                this.backgroundWorkerResult.RunWorkerAsync();
             }
         }
 
@@ -555,14 +564,15 @@ namespace dooyoABC
                 //{
                 //    u._unpayCount = 1;
                 //}
-                
+                //2013年06月19日
+
             }
         }
 
         private void backgroundWorkerUnpay_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             this.CheckPayToolStripMenuItem.Enabled = true;
-            ResetUserListView();            
+            ResetUserListView();
         }
 
         private void CheckPayToolStripMenuItem_Click(object sender, EventArgs e)
@@ -576,16 +586,123 @@ namespace dooyoABC
 
         private void listViewUser_DoubleClick(object sender, EventArgs e)
         {
-             
+
             if (this.listViewUser.SelectedItems.Count > 0)
             {
                 ListViewItem lvi = this.listViewUser.SelectedItems[0];
                 UserManager.User u = lvi.Tag as UserManager.User;
-                if (u._unpayCount>0)
+                //if (u._unpayCount>0)
                 {
                     WebViewForm wvf = new WebViewForm(u);
-                    wvf.Show();   
+                    wvf.Show();
                 }
+            }
+        }
+
+        private void ResultToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ResultToolStripMenuItem.Enabled = false;
+            this.ExportToolStripMenuItem.Enabled = false;
+            if (!this.backgroundWorkerResult.IsBusy)
+            {
+                this.backgroundWorkerResult.RunWorkerAsync();
+            }
+        }
+
+        private void backgroundWorkerResult_DoWork(object sender, DoWorkEventArgs e)
+        {
+            String url = "http://sale.dooyo.cn/tuan/account/myVoucher.html?tradeId=queryVoucherListAcc";
+            String keyword = DateTime.Now.ToString("yyyy年MM月dd日");
+            List<String> phones = mUserManager.getKeys();
+            for (int i = 0; i < phones.Count; i++)
+            {
+                UserManager.User u = mUserManager.mMapUser[phones[i]];
+                //查看订单页面              
+                HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(url, null, null, u._cookies);
+                System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream());
+                String content = sr.ReadToEnd(); //这里的content就是网页内容了 
+                sr.Close();
+                response.Close();
+                MatchCollection mc = GetValue(content, keyword, "<!");
+                u._resultCount = mc.Count;
+                for (int k = 0; k < mc.Count; k++)
+                {
+                    String code = mc[k].Value.Replace("<td>", "").Replace("</td>", "").Replace("\r\n", "").Trim();
+                    if (!u._codes.Contains(code))
+                    {
+                        u._codes.Add(code);
+                    }
+                }
+            }
+        }
+
+        private void backgroundWorkerResult_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.ResultToolStripMenuItem.Enabled = true;
+            this.ExportToolStripMenuItem.Enabled = true;
+            ResetUserListView();
+        }
+        public static MatchCollection GetValue(string str, string s, string e)
+        {
+            Regex rg = new Regex("(?<=(" + s + "))[.\\s\\S]*?(?=(" + e + "))", RegexOptions.Multiline | RegexOptions.Singleline);
+            MatchCollection mc = rg.Matches(str, 0);
+            return mc;
+        }
+
+        private void ExportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.ExportToolStripMenuItem.Enabled = false;
+            if (!backgroundWorkerExport.IsBusy)
+            {
+                backgroundWorkerExport.RunWorkerAsync();
+            }
+
+        }
+
+        private void backgroundWorkerExport_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                String fileName = DateTime.Now.ToString("yyyy年MM月dd日_HHmmss")+".txt";
+                FileStream aFile = new FileStream(fileName, FileMode.OpenOrCreate);
+                StreamWriter sw = new StreamWriter(aFile);
+                List<String> phones = mUserManager.getKeys();
+                for (int i = 0; i < phones.Count; i++)
+                {
+                    UserManager.User u = mUserManager.mMapUser[phones[i]];
+                    List<String> codes = u._codes;
+                    if (codes.Count > 0)
+                    {
+                        for (int j = 0; j < codes.Count; j++)
+                        {
+                            String str = u._phone + "  " + DateTime.Now.ToString("yyyy年MM月dd日") + "  " + codes[j];
+                            sw.WriteLine(str);
+                        }
+                    }
+                }
+                sw.Close();
+                e.Result = fileName;
+            }
+            catch (IOException ex)
+            {
+                e.Result = "ER:失败";
+                return;
+            }
+        }
+
+        private void backgroundWorkerExport_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.ExportToolStripMenuItem.Enabled = true;
+
+            String fileName = e.Result.ToString();
+            if(!fileName.StartsWith("ER:"))
+            {
+                if (DialogResult.OK == MessageBox.Show("输出到：" + fileName + ",是否打开文件？", "提示", MessageBoxButtons.OKCancel))
+                {
+                    String path=Application.StartupPath+"/"+fileName;
+                    Process.Start(path);
+                }
+
             }
         }
     }

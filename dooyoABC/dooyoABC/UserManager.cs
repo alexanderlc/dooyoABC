@@ -23,7 +23,9 @@ namespace dooyoABC
             public CookieCollection _cookies;
             public String _msg="";
             public int _unpayCount=0;
+            public int _resultCount = 0;
             public CheckCodeParser _parser=new CheckCodeParser();
+            public List<String> _codes = new List<String>();
         }
         List<String> mKeys ;
         public Dictionary<String, User> mMapUser;

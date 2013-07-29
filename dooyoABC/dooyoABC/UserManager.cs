@@ -89,7 +89,9 @@ namespace dooyoABC
                         u._pwd = pwd;
                         u._status = STATUS_INIT;
                         u._cookies = new CookieCollection();
-                        mMapUser.Add(phone, u);
+                        if(!mMapUser.ContainsKey(phone)){
+                            mMapUser.Add(phone, u);
+                        }
                     }
                 }
                 mKeys = new List<string>(mMapUser.Keys);

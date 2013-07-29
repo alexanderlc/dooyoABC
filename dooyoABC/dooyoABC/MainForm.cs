@@ -29,7 +29,7 @@ namespace dooyoABC
         //String mAccountUrl = "http://sale.dooyo.cn/tuan/account/myAccInfo.html?tradeId=toMyAccInfo";
         String mBuyURL = "http://sale.dooyo.cn/tuan/miao/orderMiao.html?tradeId=miaoSha";
         String mURLMyOrder = "http://sale.dooyo.cn/tuan/account/myOrder.html?tradeId=queryAccOrderList";
-        String mProductID = "SZ1080010400353";
+        String mProductID = "SZ1080010400359";
         Dictionary<String, BackgroundWorker> mWorkers;
         public MainForm()
         {
@@ -449,6 +449,10 @@ namespace dooyoABC
             {
                 this.backgroundWorkerResult.RunWorkerAsync();
             }
+            //foreach (KeyValuePair<String, UserManager.User> kv in mUserManager.mMapUser)
+            //{
+            //    startWorker(kv.Value);
+            //}
         }
 
         private void startToolStripMenuItem_Click(object sender, EventArgs e)

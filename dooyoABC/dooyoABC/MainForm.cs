@@ -29,7 +29,7 @@ namespace dooyoABC
         //String mAccountUrl = "http://sale.dooyo.cn/tuan/account/myAccInfo.html?tradeId=toMyAccInfo";
         String mBuyURL = "http://sale.dooyo.cn/tuan/miao/orderMiao.html?tradeId=miaoSha";
         String mURLMyOrder = "http://sale.dooyo.cn/tuan/account/myOrder.html?tradeId=queryAccOrderList";
-        String mProductID = "SZ1080010400359";
+        String mProductID = "SZ1080010400364";
         Dictionary<String, BackgroundWorker> mWorkers;
         public MainForm()
         {
@@ -50,6 +50,7 @@ namespace dooyoABC
             logFileWriter.Flush();
 
         }
+     
         private String CurrentPhone()
         {
             return mUserManager.getCurrentKey();
@@ -58,9 +59,10 @@ namespace dooyoABC
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            this.Text = "秒杀器 v2.1" + " 2013-06-19版";
+            this.Text = "秒杀器 v2.2" + " 2013-07-31版";
             this.mProductID = ConfigurationManager.AppSettings["pid"];
             logFileWriter = File.AppendText(".\\log.txt");
+            WriteLog("加载用户...");
             this.backgroundWorkerLoadUsers.RunWorkerAsync();
 
         }
@@ -439,7 +441,6 @@ namespace dooyoABC
         {
             this.mUserManager.ResetNext();
             WriteLog("完成用户加载");
-
             ResetUserListView();
             if (!this.backgroundWorkerUnpay.IsBusy)
             {

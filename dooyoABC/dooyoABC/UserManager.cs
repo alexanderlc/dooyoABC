@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 using Utils;
+using System.Windows.Forms;
 
 namespace dooyoABC
 {
@@ -99,6 +100,7 @@ namespace dooyoABC
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.ToString());
                 return false;
             }
         }

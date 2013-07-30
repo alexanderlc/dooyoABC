@@ -39,13 +39,6 @@ namespace dooyoABC
             this.ResultToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.listViewUser = new Utils.DoubleBufferListView();
-            this.columnHeaderPhone = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderPay = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderResult = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderPWD = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderMsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.listViewLog = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -54,6 +47,13 @@ namespace dooyoABC
             this.backgroundWorkerUnpay = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorkerResult = new System.ComponentModel.BackgroundWorker();
             this.backgroundWorkerExport = new System.ComponentModel.BackgroundWorker();
+            this.listViewUser = new Utils.DoubleBufferListView();
+            this.columnHeaderPhone = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderPay = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderResult = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderPWD = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderMsg = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -156,56 +156,6 @@ namespace dooyoABC
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 3;
             // 
-            // listViewUser
-            // 
-            this.listViewUser.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderPhone,
-            this.columnHeaderStatus,
-            this.columnHeaderPay,
-            this.columnHeaderResult,
-            this.columnHeaderPWD,
-            this.columnHeaderMsg});
-            this.listViewUser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewUser.FullRowSelect = true;
-            this.listViewUser.GridLines = true;
-            this.listViewUser.Location = new System.Drawing.Point(0, 0);
-            this.listViewUser.MultiSelect = false;
-            this.listViewUser.Name = "listViewUser";
-            this.listViewUser.Size = new System.Drawing.Size(777, 229);
-            this.listViewUser.TabIndex = 1;
-            this.listViewUser.UseCompatibleStateImageBehavior = false;
-            this.listViewUser.View = System.Windows.Forms.View.Details;
-            this.listViewUser.DoubleClick += new System.EventHandler(this.listViewUser_DoubleClick);
-            // 
-            // columnHeaderPhone
-            // 
-            this.columnHeaderPhone.Text = "手机号";
-            this.columnHeaderPhone.Width = 120;
-            // 
-            // columnHeaderStatus
-            // 
-            this.columnHeaderStatus.Text = "状态";
-            this.columnHeaderStatus.Width = 80;
-            // 
-            // columnHeaderPay
-            // 
-            this.columnHeaderPay.Text = "未支付数";
-            this.columnHeaderPay.Width = 70;
-            // 
-            // columnHeaderResult
-            // 
-            this.columnHeaderResult.Text = "结果";
-            // 
-            // columnHeaderPWD
-            // 
-            this.columnHeaderPWD.Text = "加密密码";
-            this.columnHeaderPWD.Width = 200;
-            // 
-            // columnHeaderMsg
-            // 
-            this.columnHeaderMsg.Text = "消息";
-            this.columnHeaderMsg.Width = 300;
-            // 
             // splitter1
             // 
             this.splitter1.Cursor = System.Windows.Forms.Cursors.HSplit;
@@ -265,6 +215,56 @@ namespace dooyoABC
             // 
             this.backgroundWorkerExport.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorkerExport_DoWork);
             this.backgroundWorkerExport.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorkerExport_RunWorkerCompleted);
+            // 
+            // listViewUser
+            // 
+            this.listViewUser.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderPhone,
+            this.columnHeaderStatus,
+            this.columnHeaderPay,
+            this.columnHeaderResult,
+            this.columnHeaderPWD,
+            this.columnHeaderMsg});
+            this.listViewUser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewUser.FullRowSelect = true;
+            this.listViewUser.GridLines = true;
+            this.listViewUser.Location = new System.Drawing.Point(0, 0);
+            this.listViewUser.MultiSelect = false;
+            this.listViewUser.Name = "listViewUser";
+            this.listViewUser.Size = new System.Drawing.Size(777, 229);
+            this.listViewUser.TabIndex = 1;
+            this.listViewUser.UseCompatibleStateImageBehavior = false;
+            this.listViewUser.View = System.Windows.Forms.View.Details;
+            this.listViewUser.DoubleClick += new System.EventHandler(this.listViewUser_DoubleClick);
+            // 
+            // columnHeaderPhone
+            // 
+            this.columnHeaderPhone.Text = "手机号";
+            this.columnHeaderPhone.Width = 120;
+            // 
+            // columnHeaderStatus
+            // 
+            this.columnHeaderStatus.Text = "状态";
+            this.columnHeaderStatus.Width = 80;
+            // 
+            // columnHeaderPay
+            // 
+            this.columnHeaderPay.Text = "未支付数";
+            this.columnHeaderPay.Width = 70;
+            // 
+            // columnHeaderResult
+            // 
+            this.columnHeaderResult.Text = "结果";
+            // 
+            // columnHeaderPWD
+            // 
+            this.columnHeaderPWD.Text = "加密密码";
+            this.columnHeaderPWD.Width = 200;
+            // 
+            // columnHeaderMsg
+            // 
+            this.columnHeaderMsg.Text = "消息";
+            this.columnHeaderMsg.Width = 300;
             // 
             // MainForm
             // 

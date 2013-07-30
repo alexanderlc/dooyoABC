@@ -59,8 +59,9 @@ namespace dooyoABC
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            this.Text = "秒杀器 v2.2" + " 2013-07-31版";
+            //this.Text = "秒杀器 v2.2" + " 2013-07-31版";
             this.mProductID = ConfigurationManager.AppSettings["pid"];
+            this.Text = "商品ID"+mProductID+"，上次保存日期：" + ConfigurationManager.AppSettings["dt"];
             logFileWriter = File.AppendText(".\\log.txt");
             WriteLog("加载用户...");
             this.backgroundWorkerLoadUsers.RunWorkerAsync();
@@ -220,7 +221,7 @@ namespace dooyoABC
                                     response3.Close();
                                     if (content3.Contains("抱歉"))
                                     {
-                                        msg = "ER:很抱歉，提交失败啦";
+                                        msg = "ER:提交表单失败啦" ;
                                     }
                                     else
                                     {
@@ -252,7 +253,7 @@ namespace dooyoABC
                                                 //成功啦
                                                 if (contentBuy.Contains("抱歉") || contentBuy.Contains("未开始秒杀"))
                                                 {
-                                                    msg = "ER:很抱歉，下单失败啦";
+                                                    msg = "ER:下单失败啦" ;
                                                 }
                                                 else
                                                 {
@@ -515,6 +516,7 @@ namespace dooyoABC
                 else
                 {
                     cfa.AppSettings.Settings.Add("pid", mProductID);
+                    cfa.AppSettings.Settings.Add("dt", DateTime.Now.ToString("yyyy年MM月dd日"));
                 }
                 cfa.Save();
                 WriteLog("更换商品ID：" + mProductID);

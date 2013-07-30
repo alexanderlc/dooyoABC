@@ -197,7 +197,7 @@ namespace dooyoABC
                                 parameters2.Add("code", checkCode);
                                 parameters2.Add("vCode", checkCode);
                                 parameters2.Add("userOrdersCount", "0");
-                                parameters2.Add("maxOrdersCount", "10");//2
+                                parameters2.Add("maxOrdersCount", "1");//2
                                 HttpWebResponse response3 = HttpWebResponseUtility.CreatePostHttpResponse(
                                     submitURL, parameters2, null, null, encoding, cookieCollection, true);
                                 if (response3.StatusCode == HttpStatusCode.OK)
@@ -213,38 +213,43 @@ namespace dooyoABC
                                     }
                                     else
                                     {
-                                        //下单                                              
-                                        IDictionary<string, string> buyParams = new Dictionary<string, string>();
-                                        buyParams.Add("code", checkCode);
-                                        buyParams.Add("vCode", checkCode);
-                                        buyParams.Add("mobile", u._phone);
-                                        buyParams.Add("payTypeRadio", "1");
-                                        buyParams.Add("product_id", this.mProductID);
-                                        buyParams.Add("product_props", "");
-                                        buyParams.Add("product_type", "0");
-                                        buyParams.Add("quantity", "1");
-                                        HttpWebResponse responseBuy = HttpWebResponseUtility.CreatePostHttpResponse(
-                                               mBuyURL, buyParams, null, null, encoding, cookieCollection, true);
-                                        if (responseBuy.StatusCode == HttpStatusCode.OK)
+                                        int tryCnt = 2;
+                                        while (tryCnt > 0)
                                         {
-                                            //log("下单");
-                                            System.IO.StreamReader srBuy = new System.IO.StreamReader(responseBuy.GetResponseStream());
-                                            String contentBuy = srBuy.ReadToEnd(); //这里的content就是网页内容了 
-                                            srBuy.Close();
-                                            //成功啦
-                                            if (contentBuy.Contains("抱歉") || contentBuy.Contains("未开始秒杀"))
+                                            tryCnt = tryCnt - 1;
+                                            //下单                                              
+                                            IDictionary<string, string> buyParams = new Dictionary<string, string>();
+                                            buyParams.Add("code", checkCode);
+                                            buyParams.Add("vCode", checkCode);
+                                            buyParams.Add("mobile", u._phone);
+                                            buyParams.Add("payTypeRadio", "1");
+                                            buyParams.Add("product_id", this.mProductID);
+                                            buyParams.Add("product_props", "");
+                                            buyParams.Add("product_type", "0");
+                                            buyParams.Add("quantity", "1");
+                                            HttpWebResponse responseBuy = HttpWebResponseUtility.CreatePostHttpResponse(
+                                                   mBuyURL, buyParams, null, null, encoding, cookieCollection, true);
+                                            if (responseBuy.StatusCode == HttpStatusCode.OK)
                                             {
-                                                msg = "ER:很抱歉，下单失败啦";
+                                                //log("下单");
+                                                System.IO.StreamReader srBuy = new System.IO.StreamReader(responseBuy.GetResponseStream());
+                                                String contentBuy = srBuy.ReadToEnd(); //这里的content就是网页内容了 
+                                                srBuy.Close();
+                                                //成功啦
+                                                if (contentBuy.Contains("抱歉") || contentBuy.Contains("未开始秒杀"))
+                                                {
+                                                    msg = "ER:很抱歉，下单失败啦";
+                                                }
+                                                else
+                                                {
+                                                    msg = "DONE:快付款吧";
+                                                }
                                             }
                                             else
                                             {
-                                                msg = "DONE:快付款吧";
+                                                //log("下单错误，返回code：" + responseBuy.StatusCode);
                                             }
-                                        }
-                                        else
-                                        {
-                                            //log("下单错误，返回code：" + responseBuy.StatusCode);
-                                        }
+                                        }//while
                                     }//if(!content3.Contains("抱歉"))
                                 }//if (response3.StatusCode == HttpStatusCode.OK)
                                 else

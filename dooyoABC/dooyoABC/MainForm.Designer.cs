@@ -152,7 +152,7 @@ namespace dooyoABC
             this.splitContainer1.Panel2.Controls.Add(this.splitter1);
             this.splitContainer1.Panel2.Controls.Add(this.listViewLog);
             this.splitContainer1.Size = new System.Drawing.Size(777, 463);
-            this.splitContainer1.SplitterDistance = 230;
+            this.splitContainer1.SplitterDistance = 229;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -171,7 +171,7 @@ namespace dooyoABC
             this.listViewUser.Location = new System.Drawing.Point(0, 0);
             this.listViewUser.MultiSelect = false;
             this.listViewUser.Name = "listViewUser";
-            this.listViewUser.Size = new System.Drawing.Size(777, 230);
+            this.listViewUser.Size = new System.Drawing.Size(777, 229);
             this.listViewUser.TabIndex = 1;
             this.listViewUser.UseCompatibleStateImageBehavior = false;
             this.listViewUser.View = System.Windows.Forms.View.Details;
@@ -224,7 +224,7 @@ namespace dooyoABC
             this.listViewLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewLog.Location = new System.Drawing.Point(0, 0);
             this.listViewLog.Name = "listViewLog";
-            this.listViewLog.Size = new System.Drawing.Size(777, 228);
+            this.listViewLog.Size = new System.Drawing.Size(777, 229);
             this.listViewLog.TabIndex = 0;
             this.listViewLog.UseCompatibleStateImageBehavior = false;
             this.listViewLog.View = System.Windows.Forms.View.Details;

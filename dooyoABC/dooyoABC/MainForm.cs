@@ -29,7 +29,7 @@ namespace dooyoABC
         //String mAccountUrl = "http://sale.dooyo.cn/tuan/account/myAccInfo.html?tradeId=toMyAccInfo";
         String mBuyURL = "http://sale.dooyo.cn/tuan/miao/orderMiao.html?tradeId=miaoSha";
         String mURLMyOrder = "http://sale.dooyo.cn/tuan/account/myOrder.html?tradeId=queryAccOrderList";
-        String mProductID = "SZ1080010400364";
+        String mProductID = "SZ1080010400365";
         Dictionary<String, BackgroundWorker> mWorkers;
         public MainForm()
         {
@@ -168,6 +168,7 @@ namespace dooyoABC
                     try
                     {
                         //验证验证码
+                        // url:"/tuan/miao/miaoindex.html?tradeId=checkCodeForImmediately",
                         String checkCodeURL = "http://sale.dooyo.cn/tuan/miao/miaoindex.html?tradeId=checkCode";
                         IDictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters.Add("code", checkCode);
@@ -198,6 +199,16 @@ namespace dooyoABC
                                 parameters2.Add("vCode", checkCode);
                                 parameters2.Add("userOrdersCount", "0");
                                 parameters2.Add("maxOrdersCount", "1");//2
+                                //parameters2.Add("activityCode", "1");//2
+                                //parameters2.Add("max_purchase_profit", "0.0");//2	
+                                //parameters2.Add("mobile", u._phone);//2	
+                                //parameters2.Add("order_sizecolor", "");//2	
+                                //parameters2.Add("product_id", this.mProductID);//2	
+                                // parameters2.Add("product_props", "");//2	
+                                //parameters2.Add("quantity", "1");//2		
+                                // parameters2.Add("repeatOrderId", "");//2		
+                                // parameters2.Add("token", "1375190998404");//2	
+
                                 HttpWebResponse response3 = HttpWebResponseUtility.CreatePostHttpResponse(
                                     submitURL, parameters2, null, null, encoding, cookieCollection, true);
                                 if (response3.StatusCode == HttpStatusCode.OK)
@@ -222,11 +233,14 @@ namespace dooyoABC
                                             buyParams.Add("code", checkCode);
                                             buyParams.Add("vCode", checkCode);
                                             buyParams.Add("mobile", u._phone);
-                                            buyParams.Add("payTypeRadio", "1");
+                                            //buyParams.Add("payTypeRadio", "1");
                                             buyParams.Add("product_id", this.mProductID);
                                             buyParams.Add("product_props", "");
                                             buyParams.Add("product_type", "0");
+                                            buyParams.Add("payTypeRadio", "ABC2");
                                             buyParams.Add("quantity", "1");
+                                            buyParams.Add("userOrdersCount", "1");
+                                            buyParams.Add("maxOrdersCount", "10");
                                             HttpWebResponse responseBuy = HttpWebResponseUtility.CreatePostHttpResponse(
                                                    mBuyURL, buyParams, null, null, encoding, cookieCollection, true);
                                             if (responseBuy.StatusCode == HttpStatusCode.OK)
@@ -536,12 +550,16 @@ namespace dooyoABC
                     ck0.Domain = "sale.dooyo.cn";
                     CookieCollection cc0 = new CookieCollection();
                     cc0.Add(ck0);
+                    Cookie ck1 = new Cookie("activeBankName", "abc");
+                    ck1.Domain = "sale.dooyo.cn";
+                    cc0.Add(ck1);
                     HttpWebResponse responseLogin = HttpWebResponseUtility.CreatePostHttpResponse(
                                                mLoginUrl, loginParams, null, null, encoding, cc0, false);
                     if (responseLogin.StatusCode == HttpStatusCode.Found)
                     {
                         CookieCollection cc = responseLogin.Cookies;
                         responseLogin.Close();
+                        cc.Add(ck1);
                         return cc;
                     }
 

@@ -28,8 +28,9 @@ namespace dooyoABC
         String mLoginUrl = "http://sale.dooyo.cn/tuan/account/login.html";
         //String mAccountUrl = "http://sale.dooyo.cn/tuan/account/myAccInfo.html?tradeId=toMyAccInfo";
         String mBuyURL = "http://sale.dooyo.cn/tuan/miao/orderMiao.html?tradeId=miaoSha";
+        ///tuan/index.html?tradeId=payOrder&order_id=080063620N
         String mURLMyOrder = "http://sale.dooyo.cn/tuan/account/myOrder.html?tradeId=queryAccOrderList";
-        String mProductID = "SZ1080010400365";
+        String mProductID = "SZ1080010400366";
         Dictionary<String, BackgroundWorker> mWorkers;
         public MainForm()
         {
@@ -171,6 +172,7 @@ namespace dooyoABC
                         //验证验证码
                         // url:"/tuan/miao/miaoindex.html?tradeId=checkCodeForImmediately",
                         String checkCodeURL = "http://sale.dooyo.cn/tuan/miao/miaoindex.html?tradeId=checkCode";
+                        //checkCodeURL = "http://sale.dooyo.cn/tuan/miao/miaoindex.html?tradeId=checkCodeForImmediately";
                         IDictionary<string, string> parameters = new Dictionary<string, string>();
                         parameters.Add("code", checkCode);
                         parameters.Add("product_id", mProductID);
@@ -199,7 +201,7 @@ namespace dooyoABC
                                 parameters2.Add("code", checkCode);
                                 parameters2.Add("vCode", checkCode);
                                 parameters2.Add("userOrdersCount", "0");
-                                parameters2.Add("maxOrdersCount", "1");//2
+                                parameters2.Add("maxOrdersCount", "2");//2
                                 //parameters2.Add("activityCode", "1");//2
                                 //parameters2.Add("max_purchase_profit", "0.0");//2	
                                 //parameters2.Add("mobile", u._phone);//2	
@@ -225,10 +227,10 @@ namespace dooyoABC
                                     }
                                     else
                                     {
-                                        int tryCnt = 2;
-                                        while (tryCnt > 0)
-                                        {
-                                            tryCnt = tryCnt - 1;
+                                        //int tryCnt = 2;
+                                        //while (tryCnt > 0)
+                                        //{
+                                        //    tryCnt = tryCnt - 1;
                                             //下单                                              
                                             IDictionary<string, string> buyParams = new Dictionary<string, string>();
                                             buyParams.Add("code", checkCode);
@@ -264,7 +266,7 @@ namespace dooyoABC
                                             {
                                                 //log("下单错误，返回code：" + responseBuy.StatusCode);
                                             }
-                                        }//while
+                                       // }//while
                                     }//if(!content3.Contains("抱歉"))
                                 }//if (response3.StatusCode == HttpStatusCode.OK)
                                 else
@@ -470,6 +472,7 @@ namespace dooyoABC
             {
                 this.backgroundWorkerResult.RunWorkerAsync();
             }
+            this.ManulToolStripMenuItem.Enabled = true;
             //foreach (KeyValuePair<String, UserManager.User> kv in mUserManager.mMapUser)
             //{
             //    startWorker(kv.Value);
@@ -555,6 +558,10 @@ namespace dooyoABC
                     Cookie ck1 = new Cookie("activeBankName", "abc");
                     ck1.Domain = "sale.dooyo.cn";
                     cc0.Add(ck1);
+                    Cookie ck2 = new Cookie("path", "/tuan/miao/");
+                    ck2.Domain = "sale.dooyo.cn";
+                    cc0.Add(ck2);
+
                     HttpWebResponse responseLogin = HttpWebResponseUtility.CreatePostHttpResponse(
                                                mLoginUrl, loginParams, null, null, encoding, cc0, false);
                     if (responseLogin.StatusCode == HttpStatusCode.Found)
@@ -734,6 +741,19 @@ namespace dooyoABC
                 }
 
             }
+        }
+
+        private void ManulToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ManualMiaoForm mmf = new ManualMiaoForm(mUserManager,mProductID);
+            mmf.MsgEvent += new ManualMiaoForm.MsgEventDelegate(mmf_MsgEvent);
+            mmf.Show();
+            
+        }
+
+        void mmf_MsgEvent(string msg)
+        {
+            WriteLog(msg);
         }
     }
 }

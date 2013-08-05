@@ -9,6 +9,23 @@ namespace Utils
 {
     public class CheckCodeParser
     {
+        public static String parseCode(System.Drawing.Image image)
+        {
+            int row = image.Height;
+            int col = image.Width;
+            Bitmap bit = new Bitmap(image);
+            UnCodebase ucb = new UnCodebase(bit);
+            ucb.Save("1.jpg");
+            int gray = ucb.GetDgGrayValue();
+            ucb.Save("2.jpg");
+            ucb.ClearNoise(gray,3);
+            ucb.Save("3.jpg");
+            ucb.clearColor();
+            ucb.Save("4.jpg");
+            //ucb.clear1();
+            //ucb.Save("5.jpg");
+            return "";
+        }
         public CheckCodeParser()
         {
             initBmpSamples();

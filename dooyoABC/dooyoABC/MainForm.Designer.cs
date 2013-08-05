@@ -33,6 +33,7 @@ namespace dooyoABC
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.ConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ManulToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.RefreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CheckPayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,41 +75,50 @@ namespace dooyoABC
             this.ConfigToolStripMenuItem,
             this.StartToolStripMenuItem,
             this.StopToolStripMenuItem,
+            this.ManulToolStripMenuItem,
             this.RefreshToolStripMenuItem,
             this.CheckPayToolStripMenuItem,
             this.ResultToolStripMenuItem,
             this.ExportToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(777, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(777, 25);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // ConfigToolStripMenuItem
             // 
             this.ConfigToolStripMenuItem.Name = "ConfigToolStripMenuItem";
-            this.ConfigToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.ConfigToolStripMenuItem.Size = new System.Drawing.Size(81, 21);
             this.ConfigToolStripMenuItem.Text = "设置商品ID";
             this.ConfigToolStripMenuItem.Click += new System.EventHandler(this.ConfigToolStripMenuItem_Click);
             // 
             // StartToolStripMenuItem
             // 
             this.StartToolStripMenuItem.Name = "StartToolStripMenuItem";
-            this.StartToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
+            this.StartToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
             this.StartToolStripMenuItem.Text = "开始秒杀";
             this.StartToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
+            // 
+            // ManulToolStripMenuItem
+            // 
+            this.ManulToolStripMenuItem.Enabled = false;
+            this.ManulToolStripMenuItem.Name = "ManulToolStripMenuItem";
+            this.ManulToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
+            this.ManulToolStripMenuItem.Text = "手动秒杀";
+            this.ManulToolStripMenuItem.Click += new System.EventHandler(this.ManulToolStripMenuItem_Click);
             // 
             // StopToolStripMenuItem
             // 
             this.StopToolStripMenuItem.Name = "StopToolStripMenuItem";
-            this.StopToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.StopToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.StopToolStripMenuItem.Text = "停止";
             this.StopToolStripMenuItem.Click += new System.EventHandler(this.StopToolStripMenuItem_Click);
             // 
             // RefreshToolStripMenuItem
             // 
             this.RefreshToolStripMenuItem.Name = "RefreshToolStripMenuItem";
-            this.RefreshToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.RefreshToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
             this.RefreshToolStripMenuItem.Text = "刷新";
             this.RefreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItem_Click);
             // 
@@ -116,7 +126,7 @@ namespace dooyoABC
             // 
             this.CheckPayToolStripMenuItem.Enabled = false;
             this.CheckPayToolStripMenuItem.Name = "CheckPayToolStripMenuItem";
-            this.CheckPayToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
+            this.CheckPayToolStripMenuItem.Size = new System.Drawing.Size(92, 21);
             this.CheckPayToolStripMenuItem.Text = "查看支付状况";
             this.CheckPayToolStripMenuItem.Click += new System.EventHandler(this.CheckPayToolStripMenuItem_Click);
             // 
@@ -124,7 +134,7 @@ namespace dooyoABC
             // 
             this.ResultToolStripMenuItem.Enabled = false;
             this.ResultToolStripMenuItem.Name = "ResultToolStripMenuItem";
-            this.ResultToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
+            this.ResultToolStripMenuItem.Size = new System.Drawing.Size(68, 21);
             this.ResultToolStripMenuItem.Text = "查看结果";
             this.ResultToolStripMenuItem.Click += new System.EventHandler(this.ResultToolStripMenuItem_Click);
             // 
@@ -132,14 +142,14 @@ namespace dooyoABC
             // 
             this.ExportToolStripMenuItem.Enabled = false;
             this.ExportToolStripMenuItem.Name = "ExportToolStripMenuItem";
-            this.ExportToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.ExportToolStripMenuItem.Size = new System.Drawing.Size(80, 21);
             this.ExportToolStripMenuItem.Text = "导出兑换券";
             this.ExportToolStripMenuItem.Click += new System.EventHandler(this.ExportToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -151,8 +161,8 @@ namespace dooyoABC
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitter1);
             this.splitContainer1.Panel2.Controls.Add(this.listViewLog);
-            this.splitContainer1.Size = new System.Drawing.Size(777, 463);
-            this.splitContainer1.SplitterDistance = 229;
+            this.splitContainer1.Size = new System.Drawing.Size(777, 462);
+            this.splitContainer1.SplitterDistance = 228;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 3;
             // 
@@ -231,7 +241,7 @@ namespace dooyoABC
             this.listViewUser.Location = new System.Drawing.Point(0, 0);
             this.listViewUser.MultiSelect = false;
             this.listViewUser.Name = "listViewUser";
-            this.listViewUser.Size = new System.Drawing.Size(777, 229);
+            this.listViewUser.Size = new System.Drawing.Size(777, 228);
             this.listViewUser.TabIndex = 1;
             this.listViewUser.UseCompatibleStateImageBehavior = false;
             this.listViewUser.View = System.Windows.Forms.View.Details;
@@ -276,7 +286,9 @@ namespace dooyoABC
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "秒杀器";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -315,6 +327,7 @@ namespace dooyoABC
         private System.Windows.Forms.ColumnHeader columnHeaderResult;
         private System.Windows.Forms.ToolStripMenuItem ExportToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker backgroundWorkerExport;
+        private System.Windows.Forms.ToolStripMenuItem ManulToolStripMenuItem;
     }
 }
 

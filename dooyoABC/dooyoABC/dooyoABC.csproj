@@ -74,8 +74,21 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="HttpWebResponseUtility.cs" />
+    <Compile Include="ManualMiaoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManualMiaoForm.Designer.cs">
+      <DependentUpon>ManualMiaoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MiaoUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MiaoUserControl.Designer.cs">
+      <DependentUpon>MiaoUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnCodebase.cs" />
     <Compile Include="UserManager.cs" />
     <Compile Include="WebViewForm.cs">
       <SubType>Form</SubType>
@@ -88,6 +101,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManualMiaoForm.resx">
+      <DependentUpon>ManualMiaoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MiaoUserControl.resx">
+      <DependentUpon>MiaoUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

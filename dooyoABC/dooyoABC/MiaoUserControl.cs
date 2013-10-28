@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using Utils;
+using System.Web;
 
 namespace dooyoABC
 {
@@ -56,7 +57,7 @@ namespace dooyoABC
             Random ra = new Random();
             String getCodeURL = "http://sale.dooyo.cn/tuan/code.html?tradeId=getMiaoShaCode&t=" + ra.Next();
             getCodeURL = "http://sale.dooyo.cn/tuan/code.html?tradeId=getMiaoShaCodeForImmediately&t=" + ra.Next();
-            
+           // getCodeURL = "http://app.wandafilm.com//wandaFilm/verifyCodeServlet?uuid=b30de9e5-33e4-4727-a1fe-b57c1a28a1d3";
             HttpWebResponse response = HttpWebResponseUtility.CreateGetHttpResponse(getCodeURL, null, null, cookieCollection);
             if (response.StatusCode == HttpStatusCode.OK)
             {
@@ -98,9 +99,10 @@ namespace dooyoABC
             {
                 //验证验证码
                 // url:"/tuan/miao/miaoindex.html?tradeId=checkCodeForImmediately",
-                String checkCodeURL = "http://sale.dooyo.cn/tuan/miao/miaoindex.html?tradeId=checkCode";
+                String checkCodeURL = "http://sale.dooyo.cn/tuan/miao/miaoindex.html?tradeId=checkCode";                
                 checkCodeURL = "http://sale.dooyo.cn/tuan/miao/miaoindex.html?tradeId=checkCodeForImmediately";
                 IDictionary<string, string> parameters = new Dictionary<string, string>();
+                checkCode = HttpUtility.UrlEncode(checkCode);
                 parameters.Add("code", checkCode);
                 parameters.Add("product_id", mProductID);
                 HttpWebResponse response2 = HttpWebResponseUtility.CreatePostHttpResponse(
@@ -128,7 +130,11 @@ namespace dooyoABC
                         parameters2.Add("code", checkCode);
                         parameters2.Add("vCode", checkCode);
                         parameters2.Add("userOrdersCount", "0");
-                        parameters2.Add("maxOrdersCount", "2");
+                        parameters2.Add("maxOrdersCount", "2");//2
+                        parameters2.Add("payTypeRadio", "ABC2");
+                        parameters2.Add("product_id", this.mProductID);//2	
+                        //parameters2.Add("userOrdersCount", "0");
+                        //parameters2.Add("maxOrdersCount", "2");
                         HttpWebResponse response3 = HttpWebResponseUtility.CreatePostHttpResponse(
                             submitURL, parameters2, null, null, encoding, cookieCollection, true);
                         if (response3.StatusCode == HttpStatusCode.OK)

@@ -202,11 +202,12 @@ namespace dooyoABC
                                 parameters2.Add("vCode", checkCode);
                                 parameters2.Add("userOrdersCount", "0");
                                 parameters2.Add("maxOrdersCount", "2");//2
+                                parameters2.Add("payTypeRadio", "ABC2");
                                 //parameters2.Add("activityCode", "1");//2
                                 //parameters2.Add("max_purchase_profit", "0.0");//2	
                                 //parameters2.Add("mobile", u._phone);//2	
                                 //parameters2.Add("order_sizecolor", "");//2	
-                                //parameters2.Add("product_id", this.mProductID);//2	
+                                parameters2.Add("product_id", this.mProductID);//2	
                                 // parameters2.Add("product_props", "");//2	
                                 //parameters2.Add("quantity", "1");//2		
                                 // parameters2.Add("repeatOrderId", "");//2		
@@ -227,10 +228,7 @@ namespace dooyoABC
                                     }
                                     else
                                     {
-                                        //int tryCnt = 2;
-                                        //while (tryCnt > 0)
-                                        //{
-                                        //    tryCnt = tryCnt - 1;
+                                    
                                             //下单                                              
                                             IDictionary<string, string> buyParams = new Dictionary<string, string>();
                                             buyParams.Add("code", checkCode);
@@ -265,8 +263,7 @@ namespace dooyoABC
                                             else
                                             {
                                                 //log("下单错误，返回code：" + responseBuy.StatusCode);
-                                            }
-                                       // }//while
+                                            }                                     
                                     }//if(!content3.Contains("抱歉"))
                                 }//if (response3.StatusCode == HttpStatusCode.OK)
                                 else

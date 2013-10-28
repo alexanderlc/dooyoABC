@@ -90,6 +90,10 @@ namespace Utils
                             bmpobj.SetPixel(j, i, Color.White);
                             t = 9999;
                         }
+                        else
+                        {
+                            bmpobj.SetPixel(j, i, Color.Black);
+                        }
                     }//end t                    
                     //bmpobj.SetPixel(j, i, Color.FromArgb(tmpValue, tmpValue, tmpValue));
                 }
